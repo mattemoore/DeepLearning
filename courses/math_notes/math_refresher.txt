@@ -1,0 +1,40 @@
+algebra dot-product of two vectors is = sum of (product of matching elements), results in scalar
+geometric (euclidean) dot-product of two vectors = ||a|| ||b|| cos(angle between a and b)
+magnitude (length) of a vector is  ||x|| = sqrt of (sum of (elements squared))
+distance between two vectors is d(x,y) = ||x - y|| = sqrt of (sum of (difference of elements squared))
+matrix multiplied by it's inverse returns identity matrix A
+only a square matrix can have an inverse
+determinant of matrix is the scaling factor of the transform described by matrix - det(A)
+only square matrices have determinants
+outer product of two vectors is used to determine covariance of sample vectors
+dot product of two vectors is called inner-product
+matrix trace is the sum of the diagonals 
+matrix transpose: X is 3x2 matrix, X.T is 2x3 matrix with values flipped over the diag
+a symmetric matrix is equal to it's transpose, thus X = X.T
+covariance is the relation between two variables, positive covariance means an increase in one variable means an increase in another
+covariance matrix shows the covariance for variables in a vector, i.e. X[i] and X[j] have their covariance located at E[i,j]
+eigenvalues are ....
+eigenvectors are ...
+
+linear systems: Ax = b 
+A is matrix coefficents, x is vector of variables, b is vector of answers
+solve for x = A.inv * b
+
+Example:
+x    + 2y  + 1z  = 5
+2x   + 5y  + 2z = 10
+       1y  + 1z = 3
+
+A = [[1,2,1],[2,5,2],[0,1,1]]  x = [x, y, z]  b=[5,10,3]
+A.inv = [[3,-1,-1],[-2,1,0],[2,-1,1]]
+A.inv*b = x = [2,0,3] (solution for values x, y z)
+
+Unlimited solutions (undetermined) if rows in A less than num unknonwns in x
+1 solution if (unique) rows in A same as num unknowns in x
+No solutions if more rows in A than num unknowns in x
+
+Probability Distributions
+pdf          -> normal distribution
+log pdf      -> ...
+cdf          -> ...
+log cdf      -> ...
