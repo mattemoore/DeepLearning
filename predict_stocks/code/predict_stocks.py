@@ -28,7 +28,7 @@ VOLUME_COL = 6
 # hyper-parameters
 WINDOW_SIZE = 30
 
-# X is matrix of variables and bias term
+# X is matrix of features and bias term
 X = np.array(
     STOCK_PRICES[WINDOW_SIZE:, [OPEN_COL, LOW_COL, HIGH_COL, VOLUME_COL]],
     dtype='float'
@@ -36,13 +36,13 @@ X = np.array(
 X = np.concatenate((X, np.ones((len(X), 1))), axis=1)
 num_orig_cols = X.shape[1]
 
-# Y is target values
+# Y is matrix of actual output values
 Y = np.array(
     STOCK_PRICES[WINDOW_SIZE:, CLOSE_COL],
     dtype='float'
 )
 
-# create separate array to hold dates
+# Dates are not features but we want to save them for plotting later
 dates = np.array(
     STOCK_PRICES[WINDOW_SIZE:, [0]],
     dtype='datetime64'
@@ -59,20 +59,27 @@ for row in range(len(X)):
         row_offset = WINDOW_SIZE + row - day
         X[row, col_offset] = STOCK_PRICES[row_offset, CLOSE_COL]
 
-# assert X.shape[1] == (WINDOW_SIZE + 5)
+# assert X.shape[1] == (WINDOW_SIZE + num_orig_cols)
 # pd.DataFrame(X).to_csv('X.csv')
 # pd.DataFrame(X).to_csv('Y.csv')
 
-# solve for w
+# seperate training and test sets
+# np.random.randn()
+
+# solve for w (weights)
 w = np.linalg.solve(X.T.dot(X), X.T.dot(Y))
-Y_hat = X.dot(w)
 print('w is:', w)
 
-# plot closing price across time
+# calculate predicted values based on our model (weights)
+Y_hat = X.dot(w)
+
 # convert numpy dates to pandas dates
 pd_dates = []
 for d in range(len(dates)):
     pd_dates.append(pd.Timestamp(dates[d, 0]))
+
+# plot predicted closing prices against actual
+# closing prices across time
 plt.scatter(pd_dates, Y)
 plt.plot(pd_dates, Y_hat, color='red')
 plt.show()
