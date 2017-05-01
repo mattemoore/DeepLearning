@@ -26,6 +26,7 @@ HIGH_COL = 5
 VOLUME_COL = 6
 
 # hyper-parameters
+WINDOW_SIZE = 20
 TRAINING_RATIO = 0.8
 
 
