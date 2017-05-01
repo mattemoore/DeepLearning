@@ -26,7 +26,6 @@ HIGH_COL = 5
 VOLUME_COL = 6
 
 # hyper-parameters
-WINDOW_SIZE = 30
 TRAINING_RATIO = 0.8
 
 
@@ -64,12 +63,12 @@ Y = np.array(
 
 # Dates are not features but we want to save them for plotting later
 dates = np.array(
-    STOCK_PRICES[WINDOW_SIZE:, [0]],
+    STOCK_PRICES[WINDOW_SIZE:, [DATE_COL]],
     dtype='datetime64'
 )
 
 
-# Add historical closing prices to X for 'Rolling Window Linear Regression'
+# Add previous closing prices to X for 'Rolling Window Linear Regression'
 X = np.concatenate(
     (X, np.zeros((len(X), WINDOW_SIZE))),
     axis=1
@@ -82,7 +81,7 @@ for row in range(len(X)):
 
 assert X.shape[1] == (WINDOW_SIZE + num_orig_cols)
 # pd.DataFrame(X).to_csv('X.csv')
-# pd.DataFrame(X).to_csv('Y.csv')
+# pd.DataFrame(Y).to_csv('Y.csv')
 
 
 # Create training and test sets
