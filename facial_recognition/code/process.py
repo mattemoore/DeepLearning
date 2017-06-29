@@ -12,25 +12,59 @@ https://www.kaggle.com/c/challenges-in-representation-learning-facial-expression
 import numpy as np
 import pandas as pd
 from PIL import Image
+import datetime as dt
 
-emotions = ['Angry', 'Disgust', 'Fear',
+IMG_WIDTH = 48
+EMOTIONS = ['Angry', 'Disgust', 'Fear',
             'Happy', 'Sad', 'Surprise', 'Neutral']
+EMOTIONS_IDX = 0
+PIXELS_IDX = 1
 
 
+# X is array of pixels comprising each image
+# T is the labelled emotion for each image
 def process():
-    data_frame = pd.read_csv('../input/fer2013.csv', usecols=[0, 1])
-    X = np.array(data_frame.iloc[:, 1])
-    T = np.array(data_frame.iloc[:, 0])
+
+    X, T = load_data()
+
+    # sanity checks for loading and parsing data:
+    # print(X.shape, T.shape)
+    # (35887, 2304), (35887, 1)
+    # r = np.random.random_integers(0, N - 1)
+    # print(EMOTIONS[T[r, 0]])
+    # show_image(X[r, :].tolist())
+
     return X, T
 
 
-def show_image_and_print_label(index, X, T):
-    '''
-    for sanity checks:
-    r = np.random.random_integers(0, len(T))
-    show_image_and_print_label(r)
-    '''
-    print(emotions[T[index]])
-    image_bytes = [int(i) for i in X[index].split(' ')]
-    image = Image.frombytes('L', (48, 48), bytes(image_bytes))
-    image.show()
+def load_data():
+    print('Loading data files...')
+    start_time = dt.datetime.now()
+
+    data_frame = pd.read_csv('../input/fer2013.csv',
+                             usecols=[PIXELS_IDX, EMOTIONS_IDX])
+
+    print('Loading completed in {0} seconds'.format(
+          (dt.datetime.now() - start_time).seconds))
+
+    print('Parsing data files...')
+    start_time = dt.datetime.now()
+
+    T = np.array(data_frame.iloc[:, EMOTIONS_IDX], dtype=int)
+    T = np.reshape(T, (len(T), 1))
+
+    N = len(data_frame)
+    X = np.zeros((N, IMG_WIDTH * IMG_WIDTH), dtype=int)
+
+    for i, row in enumerate(data_frame.itertuples(index=False, name=None)):
+        pixels = row[PIXELS_IDX].split(' ')
+        X[i] = pixels
+
+    print('Parsing completed in {} seconds'.format(
+          (dt.datetime.now() - start_time).seconds))
+
+    return X, T
+
+
+def show_image(int_list):
+    Image.frombytes('L', (IMG_WIDTH, IMG_WIDTH), bytes(int_list)).show()
