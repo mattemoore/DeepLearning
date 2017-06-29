@@ -88,3 +88,6 @@ ENV/
 # Rope project settings
 .ropeproject
 *.csv
+.DS_Store
+facial_recognition/input/fer2013/fer2013.bib
+facial_recognition/input/fer2013/README
