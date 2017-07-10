@@ -32,7 +32,7 @@ def process():
     # (35887, 2304), (35887, 1)
     # r = np.random.random_integers(0, N - 1)
     # print(EMOTIONS[T[r, 0]])
-    # show_image(X[r, :].tolist())
+    # show_image(X[r].tolist())
 
     return X, T
 
@@ -50,11 +50,11 @@ def load_data():
     print('Parsing data files...')
     start_time = dt.datetime.now()
 
-    T = np.array(data_frame.iloc[:, EMOTIONS_IDX], dtype=int)
+    T = np.array(data_frame.iloc[:, EMOTIONS_IDX])
     T = np.reshape(T, (len(T), 1))
 
     N = len(data_frame)
-    X = np.zeros((N, IMG_WIDTH * IMG_WIDTH), dtype=int)
+    X = np.zeros((N, IMG_WIDTH * IMG_WIDTH))
 
     for i, row in enumerate(data_frame.itertuples(index=False, name=None)):
         pixels = row[PIXELS_IDX].split(' ')
@@ -63,8 +63,9 @@ def load_data():
     print('Parsing completed in {} seconds'.format(
           (dt.datetime.now() - start_time).seconds))
 
-    return X, T
+    return X / 255.0, T
 
 
-def show_image(int_list):
-    Image.frombytes('L', (IMG_WIDTH, IMG_WIDTH), bytes(int_list)).show()
+def show_image(list_of_pixels):
+    Image.frombytes('L', (IMG_WIDTH, IMG_WIDTH),
+                    bytes([int(i) for i in list_of_pixels])).show()
