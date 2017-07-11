@@ -1,7 +1,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 from scipy.special import expit
-import process
+import process_depracated as process
 
 # np.set_printoptions(threshold=np.inf)
 
@@ -90,7 +90,7 @@ b = 0
 
 Y = expit(X.dot(w) + b)
 
-learning_rate = 0.001
+learning_rate = 0.000000001
 errors = []
 for t in range(10000):
     cost = calculate_cross_entropy(T[:, T_index], Y)
@@ -102,9 +102,7 @@ for t in range(10000):
     b -= learning_rate * (Y - T[:, T_index]).sum()
 
     Y = expit(X.dot(w) + b)
-    print('X', X)
-    print('W', w)
-    print('Y', Y)
+    
 
 plt.plot(errors)
 plt.title('Cross-entroy per iteration')
