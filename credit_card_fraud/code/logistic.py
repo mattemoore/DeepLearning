@@ -29,8 +29,8 @@ class LogisticModel(object):
         predictions = self.predict(X)
         return 1 - self.error_rate(Y, predictions)
 
-    def fit(self, X, Y, learning_rate=10e-9, reg=10e-15,
-            epochs=1000, show_fig=False):
+    def fit(self, X, Y, learning_rate=10e-13, reg=10e-15,
+            epochs=200000, show_fig=False):
         X, Y = shuffle(X, Y)
         X_valid, Y_valid = X[-1000:], Y[-1000:]
         X, Y = X[:-1000], Y[:-1000]
