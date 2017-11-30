@@ -1,66 +1,72 @@
 import pandas as pd
 import numpy as np
-from sklearn.preprocessing import LabelBinarizer
+from sklearn.preprocessing import LabelBinarizer, StandardScaler
 import matplotlib.pyplot as plt
 
 
-test = pd.read_csv('../input/test.csv')
-train = pd.read_csv('../input/train.csv')
+# load data sets
+test = pd.read_csv('../input/test.csv', index_col=0)
+train = pd.read_csv('../input/train.csv', index_col=0)
+
+# concatenate test and train sets
+test_and_train = pd.concat([train, test])
 
 
-# drop df column inplace
 def drop_feature(df, column_name):
     df.drop([column_name], axis=1, inplace=True)
 
 
 # drop mostly incomplete 'Cabin' feature
-drop_feature(train, 'Cabin')
-drop_feature(test, 'Cabin')
+drop_feature(test_and_train, 'Cabin')
 
-# drop 'Ticket' feature as it is not ordered and has different prefixes
-drop_feature(train, 'Ticket')
-drop_feature(test, 'Ticket')
+# drop 'Ticket' feature as it is not orred and has different prefixes
+drop_feature(test_and_train, 'Ticket')
 
-# combine train and test sets for mean calculations
-test_and_train = test.append(train, ignore_index=True)
+# drop 'Name' feature as it most likely has no effect on survivorability
+drop_feature(test_and_train, 'Name')
 
 # update rows missing Age values with mean of all Ages
 mean_age = np.mean(test_and_train['Age'])
-train['Age'].fillna(mean_age, inplace=True)
-test['Age'].fillna(mean_age, inplace=True)
+test_and_train['Age'].fillna(mean_age, inplace=True)
 
-# update test set rows missing Fare costs
-# with mean of all Fare costs
-# (train set not missing any)
+# update rows missing Fare costs with mean of all Fare costs
 mean_fare = np.mean(test_and_train['Fare'])
-test['Fare'].fillna(mean_fare, inplace=True)
+test_and_train['Fare'].fillna(mean_fare, inplace=True)
 
-# 2 rows in train set are missing Embarked values, drop them
-# (test set not missing any)
-train = train.dropna()
+# normalize number features
+StandardScaler(copy=False).fit_transform(test_and_train['Fare'])
+StandardScaler(copy=False).fit_transform(test_and_train['Age'])
+# StandardScaler(copy=False).fit_transform(test_and_train['Parch'])
+# StandardScaler(copy=False).fit_transform(test_and_train['SibSp'])
 
-
-def one_hot_encode_feature(df, col_to_enc, enc_col_names):
-    one_hot = LabelBinarizer().fit_transform(df[col_to_enc])
-    one_hot_df = pd.DataFrame(one_hot, columns=enc_col_names)
-    df.drop([col_to_enc], axis=1, inplace=True)
-    return pd.concat([df, one_hot_df], axis=1)
-
-
-# one hot encode the Embarked feature in test and train sets
-embarked_values = ['Embark_Cherbourg',
-                   'Embark_Queenstown',
-                   'Embark_Southampton']
-
-train = one_hot_encode_feature(train, 'Embarked', embarked_values)
-test = one_hot_encode_feature(test, 'Embarked', embarked_values)
+# fill in missing Embarked values with most common value:
+# S      914
+# C      270
+# Q      123
+# NaN      2
+test_and_train['Embarked'].fillna('S', inplace=True)
 
 
-# normalize fare column
+# one hot encode category features
+def one_hot_encode(df, feature):
+    dummies = pd.get_dummies(df[feature],
+                             prefix=feature,
+                             prefix_sep='_')
+    df = pd.concat([df, dummies], axis=1)
+    drop_feature(df, feature)
+    return df
 
-# print dataframe info (check for missing values)
-# print(test.info())
-# print(train.info())
 
+test_and_train = one_hot_encode(test_and_train, 'Embarked')
+test_and_train = one_hot_encode(test_and_train, 'Sex')
+test_and_train = one_hot_encode(test_and_train, 'Pclass')
 
+# debug data
+print(test_and_train.info())
+print(test_and_train.loc[1281])
+print(test_and_train.iloc[-1:])
+
+# sanity checks
+assert(len(test_and_train) == len(test) + len(train))
+assert(test_and_train['Survived'].count() == len(train))
 
