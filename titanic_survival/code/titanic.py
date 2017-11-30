@@ -19,10 +19,10 @@ def drop_feature(df, column_name):
 # drop mostly incomplete 'Cabin' feature
 drop_feature(test_and_train, 'Cabin')
 
-# drop 'Ticket' feature as it is not orred and has different prefixes
+# drop 'Ticket' feature as not in consistent format
 drop_feature(test_and_train, 'Ticket')
 
-# drop 'Name' feature as it most likely has no effect on survivorability
+# drop 'Name' feature as it most likely has no effect on Survived label
 drop_feature(test_and_train, 'Name')
 
 # update rows missing Age values with mean of all Ages
@@ -33,17 +33,8 @@ test_and_train['Age'].fillna(mean_age, inplace=True)
 mean_fare = np.mean(test_and_train['Fare'])
 test_and_train['Fare'].fillna(mean_fare, inplace=True)
 
-# normalize number features
-StandardScaler(copy=False).fit_transform(test_and_train['Fare'])
-StandardScaler(copy=False).fit_transform(test_and_train['Age'])
-# StandardScaler(copy=False).fit_transform(test_and_train['Parch'])
-# StandardScaler(copy=False).fit_transform(test_and_train['SibSp'])
-
 # fill in missing Embarked values with most common value:
-# S      914
-# C      270
-# Q      123
-# NaN      2
+# S=914, C=270, Q=123, NaN=2
 test_and_train['Embarked'].fillna('S', inplace=True)
 
 
@@ -61,12 +52,30 @@ test_and_train = one_hot_encode(test_and_train, 'Embarked')
 test_and_train = one_hot_encode(test_and_train, 'Sex')
 test_and_train = one_hot_encode(test_and_train, 'Pclass')
 
+# set all dtypes to be same so we can scale number features
+test_and_train = test_and_train.astype(np.float32)
+
+# normalize number features
+ss = StandardScaler(copy=False)
+ss.fit_transform(test_and_train['Fare'].values.reshape(-1, 1))
+ss.fit_transform(test_and_train['Age'].values.reshape(-1, 1))
+ss.fit_transform(test_and_train['Parch'].values.reshape(-1, 1))
+ss.fit_transform(test_and_train['SibSp'].values.reshape(-1, 1))
+
 # debug data
-print(test_and_train.info())
-print(test_and_train.loc[1281])
-print(test_and_train.iloc[-1:])
+# print(test_and_train.info())
+# print(test_and_train.loc[1281])
+# print(test_and_train.iloc[-1:])
 
 # sanity checks
 assert(len(test_and_train) == len(test) + len(train))
 assert(test_and_train['Survived'].count() == len(train))
+
+# split transformed data back into test and train sets
+train_transformed = test_and_train[:len(train)]
+test_transformed = test_and_train[-len(test):]
+# print(train_transformed.info())
+# print(test_transformed.info())
+print(train_transformed.loc[1])
+print(test_transformed.loc[892])
 
