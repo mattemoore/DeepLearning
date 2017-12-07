@@ -91,3 +91,5 @@ ENV/
 .DS_Store
 facial_recognition/input/fer2013/fer2013.bib
 facial_recognition/input/fer2013/README
+*.pkl
+titanic_survival/code/temp.py
