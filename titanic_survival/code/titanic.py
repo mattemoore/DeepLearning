@@ -1,3 +1,5 @@
+# https://www.kaggle.com/c/titanic/data
+
 import pandas as pd
 import numpy as np
 import pickle
@@ -9,7 +11,7 @@ from sklearn.ensemble import RandomForestClassifier, VotingClassifier
 from sklearn.svm import SVC
 from sklearn.model_selection import GridSearchCV
 
-#PROCESS DATA
+# PROCESS DATA
 
 # load data sets
 test = pd.read_csv('../input/test.csv', index_col=0)

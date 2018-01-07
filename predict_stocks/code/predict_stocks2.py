@@ -1,3 +1,8 @@
+# * Predict price of WMT stock a number of days after
+#   its fundamentals are released
+# * Data available free from Quandl.com
+
+
 import datetime as dt
 import numpy as np
 import pandas as pd
@@ -9,8 +14,6 @@ from sklearn.neural_network import MLPRegressor
 from sklearn.model_selection import train_test_split, GridSearchCV
 import utils
 
-# GOAL: Predict price of stock a number of days
-#       after its fundamentals are released
 
 NUM_DAYS_OUT = 15
 
@@ -29,15 +32,15 @@ for i in range(len(fund)):
     close_on_fund_date = eod.iloc[eod.index.get_loc(fund_date, method='ffill')]['Adj_Close']
     fund.loc[i, 'close_reportperiod'] = close_on_fund_date
 
-# add matching matching same from pre to fund
+# add matching sample from pre to fund
 # skip last sample in pre as it won't have matching sample in fund
+# TODO: why are we missing 'Q' record in pre records for 2015-1-31 and 2017-1-31?
+# TODO: add columns of matching pre to fund
 '''
 for i in range(len(pre) - 1):
     pre_date = pre.iloc[i]['per_end_date']
     mask = fund['reportperiod'] == pre_date
     fund.loc[mask, 'announce_date'] = pre.iloc[i + 1]['announce_date']
-    # TODO: why are we missing 'Q' record in pre records for 2015-1-31 and 2017-1-31?
-    # TODO: add columns of matching pre to fund
 print(fund['announce_date'])
 print(fund[pd.notnull(fund['announce_date'])])
 '''
@@ -111,8 +114,8 @@ elastic_grid = create_model(elastic_reg, X_train, X_test,
 
 neural_reg = MLPRegressor()
 t = ()
-for i in range(5000):
-    t = t + (5000,)
+for i in range(100):
+    t = t + (100,)
 param_grid = {'hidden_layer_sizes': [t],
               'solver': ['lbfgs'],
               'max_iter': [10000]}

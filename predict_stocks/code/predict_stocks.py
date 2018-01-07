@@ -1,4 +1,6 @@
-'''Predict stock market prices, make billions.'''
+# Basic linear regression - rolling window stock prediction
+# to predict MSFT stock price
+# https://www.kaggle.com/dgawlik/nyse/data
 
 # pylint: disable=invalid-name
 
@@ -10,11 +12,6 @@ import matplotlib.pyplot as plt
 STOCK_SYMBOL = 'MSFT'
 ALL_PRICES = pd.read_csv('../input/prices.csv')
 STOCK_PRICES = np.array(ALL_PRICES[ALL_PRICES['symbol'] == STOCK_SYMBOL])
-'''
-ALL_FUNDAMENTALS = pd.read_csv('../input/fundamentals.csv')
-COMPANY_FUNDAMENTALS = \
-    ALL_FUNDAMENTALS[ALL_FUNDAMENTALS['Ticker Symbol'] == STOCK_SYMBOL]
-'''
 
 # csv column indexes
 DATE_COL = 0
