@@ -37,7 +37,7 @@ def get_csv_from_quandl(url, file_path):
 def get_wmt_fundamentals():
     file_path = '../input/wmt_fund.csv'
     url = 'https://www.quandl.com/api/v3/datatables/SHARADAR/SF1.csv?'\
-          'ticker=WMT&dimension=ARQ&api_key=GgxeN_cyttYzSsZAqiT9'
+          'ticker=WMT&dimension=ARQ&api_key=<api_key>'
     get_csv_from_quandl(url, file_path)
     return pd.read_csv(file_path)
 
@@ -45,7 +45,7 @@ def get_wmt_fundamentals():
 def get_wmt_eod():
     file_path = '../input/wmt_eod.csv'
     url = 'https://www.quandl.com/api/v3/datasets/EOD/WMT.csv?'\
-          'api_key=GgxeN_cyttYzSsZAqiT9'
+          'api_key=<api_key>'
     get_csv_from_quandl(url, file_path)
     return pd.read_csv(file_path)
 
@@ -53,7 +53,7 @@ def get_wmt_eod():
 def get_wmt_pre():
     file_path = '../input/wmt_pre.csv'
     url = 'https://www.quandl.com/api/v3/datatables/ZACKS/IRH.csv?'\
-          'ticker=WMT&api_key=GgxeN_cyttYzSsZAqiT9'
+          'ticker=WMT&api_key=<api_key>'
     get_csv_from_quandl(url, file_path)
     return pd.read_csv(file_path)
 
